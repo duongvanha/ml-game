@@ -13,20 +13,37 @@ function splitDataSet(data, testCount) {
 }
 
 
-(async () => {
-    const data = parser(rawData, { cast: true });
-    const testSize = 50;
-    const [dataTest, dataTrain] = splitDataSet(data, testSize)
-    _.range(1, 20).forEach(k => {
-        const result = _.chain(dataTest)
-            .filter((item) => trainer(dataTrain, _.initial(item), k) === _.last(item))
-            .size()
-            .divide(testSize)
-            .value()
-        console.log(`k: ${k}, retult: ${result}`)
-    })
+function normalization(data, countColumn) {
+    const dataClone = _.cloneDeep(data)
+    for (let i = 0; i < countColumn; i++) {
+        const column = dataClone.map(row => row[i])
+        const max = _.max(column);
+        const min = _.min(column);
 
-})()
+        for (let j = 0; j < column.length; j++) {
+            // if min == max infinity
+            dataClone[j][i] = (dataClone[j][i] - min) / (max - min)
+
+        }
+    }
+
+    return dataClone
+}
+
+const data = parser(rawData, { cast: true });
+const testSize = 100;
+const k = 10
+_.range(0, 3).forEach(feature => {
+    const newData = data.map(row => [row[feature], _.last(row)])
+    const [dataTest, dataTrain] = splitDataSet(normalization(newData,1), testSize)
+
+    const result = _.chain(dataTest)
+        .filter((item) => trainer(dataTrain, _.initial(item), k) === _.last(item))
+        .size()
+        .divide(testSize)
+        .value()
+    console.log(`feature: ${feature}, retult: ${result}`)
+})
 
 // CsvParserPromise(rawData)
 //     .then(splitDataSet)
