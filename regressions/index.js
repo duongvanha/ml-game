@@ -2,8 +2,6 @@ require('@tensorflow/tfjs-node');
 const load = require('./load-csv');
 const tf = require('@tensorflow/tfjs');
 
-
-
 const { features, labels, testFeatures, testLabels } = load('./data.csv', {
     shuffle     : true,
     splitTest   : 10,
@@ -13,6 +11,8 @@ const { features, labels, testFeatures, testLabels } = load('./data.csv', {
 
 const _features = tf.tensor(features);
 const _labels = tf.tensor(labels);
+
+const k = 3
 
 
 function knn(features, labels, predictionPoint, k) {
@@ -30,4 +30,7 @@ function knn(features, labels, predictionPoint, k) {
         .reduce((total, i) => total + i, 0) / k
 }
 
-console.log(knn(_features, _labels, tf.tensor(testFeatures[0]), 2),' - ',testLabels[0][0])
+testFeatures.forEach((featureTest, i) => {
+    const value = knn(_features, _labels, tf.tensor(featureTest), k)
+    console.log(`value: ${value} - expect: ${testLabels[i][0]} - loss: ${((value - testLabels[i][0]) / value) * 100}%`)
+})
