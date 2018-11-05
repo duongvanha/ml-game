@@ -1,0 +1,24 @@
+{
+  "name": "regressions",
+  "version": "1.0.0",
+  "description": "Just a demo version to study machine learning",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/duongvanha/ml-game.git"
+  },
+  "author": "dvha <friendd1996@gmail.com>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/duongvanha/ml-game/issues"
+  },
+  "homepage": "https://github.com/duongvanha/ml-game#readme",
+  "dependencies": {
+    "@tensorflow/tfjs-node": "^0.1.19",
+    "lodash": "^4.17.11",
+    "shuffle-seed": "^1.1.6"
+  }
+}
