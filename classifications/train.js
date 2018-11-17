@@ -20,4 +20,4 @@ module.exports = function (data, point, k) {
         .first()
         .parseInt()
         .value()
-}
+};
