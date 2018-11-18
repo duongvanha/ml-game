@@ -2,29 +2,35 @@ require('@tensorflow/tfjs-node');
 const tf = require('@tensorflow/tfjs');
 
 module.exports = class LinearRegression {
-    constructor(features, labels, options = {learningRate: 0.1, iterations: 1000}) {
+    constructor(features, labels, options) {
         this.features   = this._processFeature(features);
         this.labels     = tf.tensor(labels);
         this.mseHistory = [];
 
 
-        this.options    = options;
+        this.options = Object.assign({learningRate: 0.1, iterations: 1000, batchSize: 3}, options);
         this.weights = tf.zeros([this.features.shape[1], 1]);
     }
 
     train() {
+        const {batchSize} = this.options;
+        const batQuantity = Math.floor(this.features.shape[0] / batchSize);
         for (let i = 0; i < this.options.iterations; i++) {
-            this._gradientDescent();
+            for (let j = 0; j < batQuantity; j++) {
+                const features = this.features.slice([j * batchSize], [batchSize, -1]);
+                const labels   = this.labels.slice([j * batchSize], [batchSize, -1]);
+                this._gradientDescent(features, labels);
+            }
             this._recordMSE();
             this._optimizeLearningRate()
         }
     }
 
-    _gradientDescent() {
-        const mse    = this.features.matMul(this.weights).sub(this.labels);
-        const slopes = this.features.transpose().matMul(mse);
+    _gradientDescent(features, labels) {
+        const mse    = features.matMul(this.weights).sub(labels);
+        const slopes = features.transpose().matMul(mse);
 
-        const diff   = slopes.div(this.features.shape[0])
+        const diff   = slopes.div(features.shape[0])
               // .mul(2)
         ;
         this.weights = this.weights.sub(diff.mul(this.options.learningRate));
