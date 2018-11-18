@@ -2,7 +2,7 @@ const load             = require('./load-csv');
 const LinearRegression = require('./linearRegression');
 const plot             = require('node-remote-plot');
 
-const {features, labels, testFeatures, testLabels} = load('./cars.csv', {
+const {features, labels, testFeatures, testLabels} = load('regressionsv2/cars.csv', {
     shuffle     : true,
     splitTest   : 50,
     dataColumns : ['horsepower', 'weight', 'displacement'],

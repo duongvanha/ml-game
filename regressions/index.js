@@ -1,16 +1,16 @@
 require('@tensorflow/tfjs-node');
 const load = require('./load-csv');
-const tf = require('@tensorflow/tfjs');
+const tf   = require('@tensorflow/tfjs');
 
-const { features, labels, testFeatures, testLabels } = load('./data.csv', {
+const {features, labels, testFeatures, testLabels} = load('regressions/data.csv', {
     shuffle     : true,
     splitTest   : 10,
     dataColumns : ['lat', 'long'],
-    labelColumns: ['price']
+    labelColumns: ['price'],
 });
 
 const _features = tf.tensor(features);
-const _labels = tf.tensor(labels);
+const _labels   = tf.tensor(labels);
 
 const k = 3;
 
