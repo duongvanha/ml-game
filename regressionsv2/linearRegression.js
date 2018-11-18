@@ -3,16 +3,20 @@ const tf = require('@tensorflow/tfjs');
 
 module.exports = class LinearRegression {
     constructor(features, labels, options = {learningRate: 0.1, iterations: 1000}) {
-        this.features = this._processFeature(features);
-        this.labels   = tf.tensor(labels);
-        this.options  = options;
+        this.features   = this._processFeature(features);
+        this.labels     = tf.tensor(labels);
+        this.mseHistory = [];
 
-        this.weights = tf.zeros([2, 1]);
+
+        this.options    = options;
+        this.weights = tf.zeros([this.features.shape[1], 1]);
     }
 
     train() {
         for (let i = 0; i < this.options.iterations; i++) {
-            this._gradientDescent()
+            this._gradientDescent();
+            this._recordMSE();
+            this._optimizeLearningRate()
         }
     }
 
@@ -34,6 +38,26 @@ module.exports = class LinearRegression {
         }
 
         return features.sub(this.mean).div(this.variance.pow(0.5));
+    }
+
+    _recordMSE() {
+        const mse = this.features
+            .matMul(this.weights)
+            .sub(this.labels)
+            .pow(2)
+            .sum()
+            .div(this.features.shape[0])
+            .get();
+
+        this.mseHistory.unshift(mse);
+    }
+
+    _optimizeLearningRate() {
+        if (this.mseHistory.length < 2) {
+            return
+        }
+
+        this.options.learningRate *= this.mseHistory[0] > this.mseHistory[1] ? 0.5 : 1.05;
     }
 
     _processFeature(features) {
