@@ -3,14 +3,14 @@ const LinearRegression = require('./linearRegression');
 
 const {features, labels, testFeatures, testLabels} = load('./cars.csv', {
     shuffle     : true,
-    splitTest   : 10,
+    splitTest   : 50,
     dataColumns : ['horsepower'],
     labelColumns: ['mpg'],
 });
 
 
 const linearRegression = new LinearRegression(features, labels, {
-    learningRate: 0.001,
+    learningRate: 0.1,
     iterations  : 100,
 });
 
@@ -18,4 +18,4 @@ const linearRegression = new LinearRegression(features, labels, {
 linearRegression.train();
 
 
-console.log(`val m ${linearRegression.m}: , val b : ${linearRegression.b}`);
+console.log(linearRegression.test(testFeatures, testLabels));
