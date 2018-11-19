@@ -75,6 +75,10 @@ module.exports = class LinearRegression {
         return features;
     }
 
+    predict(values) {
+        return this._processFeature(values).matMul(this.weights);
+    }
+
     test(testFeatures, testLabels) {
         testLabels   = tf.tensor(testLabels);
         testFeatures = this._processFeature(testFeatures);
