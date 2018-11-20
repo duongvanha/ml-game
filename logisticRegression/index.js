@@ -18,5 +18,5 @@ let logisticRegression = new LogisticRegression(features, labels, {
 });
 
 logisticRegression.train();
-logisticRegression.predict(testFeatures).print();
-console.log(testLabels);
+
+console.log(logisticRegression.test(testFeatures, testLabels));

@@ -46,6 +46,16 @@ module.exports = class LinearRegression {
         return features.sub(this.mean).div(this.variance.pow(0.5));
     }
 
+    test(testFeature, testLabel) {
+        const labels      = tf.tensor(testLabel);
+        const predictions = this.predict(testFeature).round();
+
+        const incorrect = predictions.sub(labels).abs().sum().get();
+
+
+        return (predictions.shape[0] - incorrect) / predictions.shape[0]
+    }
+
     _recordMSE() {
         const mse = this.features
             .matMul(this.weights)
@@ -77,18 +87,5 @@ module.exports = class LinearRegression {
 
     predict(values) {
         return this._processFeature(values).matMul(this.weights).sigmoid();
-    }
-
-    test(testFeatures, testLabels) {
-        testLabels   = tf.tensor(testLabels);
-        testFeatures = this._processFeature(testFeatures);
-
-        const predictions = testFeatures.matMul(this.weights);
-
-        const res = testLabels.sub(predictions).pow(2).sum().get();
-
-        const tot = testLabels.sub(testLabels.mean()).pow(2).sum().get();
-
-        return 1 - (res / tot)
     }
 };
