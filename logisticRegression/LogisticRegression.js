@@ -9,7 +9,7 @@ module.exports = class LinearRegression {
 
 
         this.options = Object.assign({learningRate: 0.1, iterations: 1000, batchSize: 3}, options);
-        this.weights = tf.zeros([this.features.shape[1], 1]);
+        this.weights = tf.zeros([this.features.shape[1], +this.labels.shape[1]]);
     }
 
     train() {
@@ -27,7 +27,7 @@ module.exports = class LinearRegression {
     }
 
     _gradientDescent(features, labels) {
-        const mse    = features.matMul(this.weights).sigmoid().sub(labels);
+        const mse    = features.matMul(this.weights).softmax().sub(labels);
         const slopes = features.transpose().matMul(mse);
 
         const diff   = slopes.div(features.shape[0])
@@ -47,10 +47,9 @@ module.exports = class LinearRegression {
     }
 
     test(testFeature, testLabel) {
-        const labels      = tf.tensor(testLabel);
-        const predictions = this.predict(testFeature).round();
-
-        const incorrect = predictions.sub(labels).abs().sum().get();
+        const labels      = tf.tensor(testLabel).argMax(1);
+        const predictions = this.predict(testFeature);
+        const incorrect   = predictions.notEqual(labels).sum().get();
 
 
         return (predictions.shape[0] - incorrect) / predictions.shape[0]
@@ -86,6 +85,6 @@ module.exports = class LinearRegression {
     }
 
     predict(values) {
-        return this._processFeature(values).matMul(this.weights).sigmoid();
+        return this._processFeature(values).matMul(this.weights).softmax().argMax(1);
     }
 };
