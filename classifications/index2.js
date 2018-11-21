@@ -7,7 +7,7 @@ const plot               = require('node-remote-plot');
 const {features, labels, testFeatures, testLabels} = loadData('classifications/data1.csv', {
     shuffle     : true,
     splitTest   : 100,
-    dataColumns : ['position', 'bounciness', 'size'],
+    dataColumns : ['position', 'bounciness'],
     labelColumns: ['bucket\r'],
     converters  : {
         'bucket\r': (val) => {
@@ -21,7 +21,7 @@ const {features, labels, testFeatures, testLabels} = loadData('classifications/d
 
 const logisticRegression = new LogisticRegression(features, _.flatMap(labels), {
     learningRate: .1,
-    iterations  : 1000,
+    iterations  : 50,
     batchSize   : 10,
 });
 
