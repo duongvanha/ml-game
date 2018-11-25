@@ -19,9 +19,9 @@ const {features, labels, testFeatures, testLabels} = loadData('classifications/d
 });
 
 
-const logisticRegression = new LogisticRegression(features, _.flatMap(labels), {
+const logisticRegression = new LogisticRegression({
     learningRate: .1,
-    iterations  : 1000,
+    iterations  : 20,
     batchSize   : 100,
 });
 

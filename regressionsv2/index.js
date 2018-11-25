@@ -1,29 +1,23 @@
 const load             = require('./load-csv');
-const LinearRegression = require('./linearRegression');
-const plot             = require('node-remote-plot');
+const LinearRegression = require('./linearRegression2');
 
 const {features, labels, testFeatures, testLabels} = load('regressionsv2/cars.csv', {
     shuffle     : true,
-    splitTest   : 50,
+    splitTest   : 10,
     dataColumns : ['horsepower', 'weight', 'displacement'],
     labelColumns: ['mpg'],
 });
 
 
-const linearRegression = new LinearRegression(features, labels, {
-    learningRate: .1,
+const linearRegression = new LinearRegression({
+    learningRate: .02,
     iterations  : 20,
     batchSize   : 10,
 });
 
 
-linearRegression.train();
+linearRegression.train(features, labels);
 
+linearRegression.predict(testFeatures).print();
 
-console.log(linearRegression.test(testFeatures, testLabels));
-
-plot({
-    x     : linearRegression.mseHistory.reverse(),
-    xLabel: 'Iteration #',
-    yLabel: 'Mean Squared Error',
-});
+console.log(testLabels);
