@@ -16,8 +16,11 @@ const linearRegression = new LinearRegression({
 });
 
 
-linearRegression.train(features, labels);
+linearRegression.train(features, labels).then(() => {
+    linearRegression.predict(testFeatures).print();
 
-linearRegression.predict(testFeatures).print();
+    linearRegression.model.save('file://regressionsv2/model').then(() => console.log('saved'));
 
-console.log(testLabels);
+    console.log(testLabels);
+});
+
