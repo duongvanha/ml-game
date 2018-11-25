@@ -4,7 +4,6 @@ const tf = require('@tensorflow/tfjs');
 module.exports = class LinearRegression {
     constructor(options) {
         this.options   = Object.assign({learningRate: 0.1, iterations: 1000, batchSize: 3}, options);
-        this.weights   = tf.randomUniform([4, 1]);
         this.optimizer = tf.train.sgd(this.options.learningRate);
         this.model     = tf.sequential({
             layers: [
